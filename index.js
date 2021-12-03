@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 // import easing from './easing.js';
-import metaversefile from 'metaversefile';
-const {useApp, useFrame, useActivate, useLoaders, usePhysics, useWorld, useDefaultModules, useCleanup} = metaversefile;
+import totum from 'totum';
+const {useApp, useFrame, useActivate, useLoaders, usePhysics, useWorld, useDefaultModules, useCleanup} = totum;
 
 const baseUrl = import.meta.url.replace(/(\/)[^\/\\]*$/, '$1');
 
