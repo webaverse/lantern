@@ -9,7 +9,8 @@ export default () => {
   const app = useApp();
   const physics = usePhysics();
 
-  let physicsIds = [];
+  let removePhysic = false;
+  let physicsId = null;
   (async () => {
     const u = `${baseUrl}lantern.glb`;
     let o = await new Promise((accept, reject) => {
@@ -20,18 +21,28 @@ export default () => {
     o = o.scene;
     app.add(o);
     
-    const physicsId = physics.addGeometry(o);
-    physicsIds.push(physicsId);
+    physicsId = physics.addGeometry(o);
     
     const pointLight = new THREE.PointLight(0xFFFFFF, 1);
     pointLight.castShadows = true;
     app.add(pointLight);
   })();
   
-  useCleanup(() => {
-    for (const physicsId of physicsIds) {
+  const frame = useFrame(({timeDiff}) => {
+    if (removePhysic && physicsId) {
       physics.removeGeometry(physicsId);
+      physicsId = null;
     }
+  });
+  app.removePhysicsObjects = () => {
+    removePhysic = true;
+  }
+  app.removeSubApps = () => {
+    frame.cleanup();
+  }
+  
+  const clean = useCleanup(() => {
+    physics.removeGeometry(physicsId);
   });
 
   return app;
